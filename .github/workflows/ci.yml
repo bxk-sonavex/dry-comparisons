@@ -32,7 +32,7 @@ jobs:
           - { cxx: g++-7, std: 17, container: "gcc:7" }
     name: "Linux ${{matrix.config.cxx}} C++${{matrix.config.std}} ${{matrix.config.stdlib}}"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: "setup"
         shell: bash
         run: |
@@ -58,10 +58,11 @@ jobs:
           find . -name "self_test.dir" -exec ${COV} -abcfu -o {} self_test.cpp.gcno \;
 
       - name: "upload coverage"
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
         with:
           files: "dry-comparisons.hpp.gcov"
           fail_ci_if_error: false
+          token: ${{ secrets.CODECOV_TOKEN }}
           verbose: true
 
   build_windows:
@@ -73,7 +74,7 @@ jobs:
           - { std: 20 }
     name: "Windows C++${{matrix.config.std}}"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: "setup"
         shell: bash
         run: |
