@@ -121,12 +121,13 @@ class any_of : internal::logical_tuple<T...>
 public:
     using internal::logical_tuple<T...>::logical_tuple;
 
-    template <typename U>
-    constexpr auto operator==(const U& u) const
+    template <typename U, typename = std::enable_if_t<!std::is_same<U, any_of>::value>>
+    friend
+    constexpr auto operator==(const any_of& a, const U& u)
     noexcept(noexcept(((std::declval<const T&>() == u) || ...)))
     -> decltype(((std::declval<const T&>() == u) || ...))
     {
-        return or_all([&](auto&& v) { return v == u;});
+        return a.or_all([&](const auto& v) { return v == u;});
     }
 #if !(defined(__cpp_impl_three_way_comparison) && __cpp_impl_three_way_comparison >= 201907)
     template <typename U>
@@ -238,12 +239,13 @@ class none_of : internal::logical_tuple<T...>
     using internal::logical_tuple<T...>::and_all;
 public:
     using internal::logical_tuple<T...>::logical_tuple;
-    template <typename U>
-    constexpr auto operator==(const U& u) const
+    template <typename U, typename = std::enable_if_t<!std::is_same<U, none_of>{}>>
+    friend
+    constexpr auto operator==(const none_of& n, const U& u)
     noexcept(noexcept(!((std::declval<const T&>() == u) || ...)))
     -> decltype(!((std::declval<const T&>() == u) || ...))
     {
-        return !or_all([&](auto&& v) { return v == u;});
+        return !n.or_all([&](auto&& v) { return v == u;});
     }
 #if !(defined(__cpp_impl_three_way_comparison) && __cpp_impl_three_way_comparison >= 201907)
     template <typename U>
@@ -357,12 +359,13 @@ class all_of : internal::logical_tuple<T...>
 public:
     using internal::logical_tuple<T...>::logical_tuple;
 
-    template <typename U>
-    constexpr auto operator==(const U& u) const
+    template <typename U, typename = std::enable_if_t<!std::is_same<U, all_of>::value>>
+    friend
+    constexpr auto operator==(const all_of& a, const U& u)
     noexcept(noexcept(((std::declval<const T&>() == u) && ...)))
     -> decltype(((std::declval<const T&>() == u) && ...))
     {
-        return and_all([&](auto&& v){ return v == u;});
+        return a.and_all([&](const auto& v){ return v == u;});
     }
 #if !(defined(__cpp_impl_three_way_comparison) && __cpp_impl_three_way_comparison >= 201907)
     template <typename U>
