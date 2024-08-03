@@ -10,6 +10,12 @@ jobs:
       fail-fast: false
       matrix:
         config:
+          - { cxx: clang++-18, std: 17, stdlib: "-stdlib=libc++", linker: "-fuse-ld=gold -lc++abi", container: "clang:18" }
+          - { cxx: clang++-18, std: 20, stdlib: "-stdlib=libc++", linker: "-fuse-ld=gold -lc++abi", container: "clang:18" }
+          - { cxx: clang++-18, std: 17, container: "clang:18" }
+          - { cxx: clang++-18, std: 20, container: "clang:18" }
+          - { cxx: g++-13, std: 17, container: "gcc:13" }
+          - { cxx: g++-13, std: 20, container: "gcc:13" }
           - { cxx: clang++-10, std: 17, stdlib: "-stdlib=libc++", linker: "-fuse-ld=gold -lc++abi", container: "clang:10" }
           - { cxx: clang++-10, std: 20, stdlib: "-stdlib=libc++", linker: "-fuse-ld=gold -lc++abi", container: "clang:10" }
           - { cxx: clang++-10, std: 17, container: "clang:10" }
